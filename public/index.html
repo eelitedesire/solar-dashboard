@@ -66,19 +66,6 @@
             cursor: pointer;
             color: #999;
         }
-        .refresh-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .refresh-button:hover {
-            background-color: #1976D2;
-        }
         .save-button {
             padding: 5px 10px;
             background-color: #4CAF50;
@@ -94,8 +81,6 @@
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Solar Power Dashboard</h1>
-    <button class="refresh-button" onclick="refreshData()">Refresh Data</button>
     <div class="dashboard" id="dashboard"></div>
     
     <script>
@@ -199,7 +184,6 @@
                 if (result.success) {
                     alert('Settings updated successfully!');
                     toggleSettings(id);
-                    refreshData();
                 } else {
                     alert('Failed to update settings: ' + result.message);
                 }
@@ -215,14 +199,8 @@
                 .replace(/^./, str => str.toUpperCase());
         }
         
-        function refreshData() {
-            fetchSolarData();
-        }
-        
         // Initial load
         fetchSolarData();
-        // Auto refresh every 30 seconds
-        setInterval(fetchSolarData, 30000);
     </script>
 </body>
 </html>
