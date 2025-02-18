@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Power Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gauge-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .gauge-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .gauge-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 10px 0;
+        }
+        .gauge-unit {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .gauge-settings {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .gauge-settings label {
+            display: block;
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .gauge-settings input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .edit-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #999;
+        }
+        .refresh-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .refresh-button:hover {
+            background-color: #1976D2;
+        }
+        .save-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .save-button:hover {
+            background-color: #388E3C;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Solar Power Dashboard</h1>
+    <button class="refresh-button" onclick="refreshData()">Refresh Data</button>
+    <div class="dashboard" id="dashboard"></div>
+    
+    <script>
+        async function fetchSolarData() {
+            try {
+                const response = await fetch('/api/solar-data');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                updateDashboard(data);
+            } catch (error) {
+                console.error('Error fetching solar data:', error);
+                alert('Failed to load dashboard data. Please check the server connection.');
+            }
+        }
+        
+        function updateDashboard(data) {
+            const dashboard = document.getElementById('dashboard');
+            dashboard.innerHTML = '';
+            
+            for (const [key, value] of Object.entries(data)) {
+                if (value) {
+                    const card = createGaugeCard(
+                        key,
+                        value.title || formatTitle(key),
+                        value.max, // Using max value instead of random value
+                        value.unit,
+                        value.min,
+                        value.max
+                    );
+                    dashboard.appendChild(card);
+                }
+            }
+        }
+        
+        function createGaugeCard(id, title, value, unit, min, max) {
+            const card = document.createElement('div');
+            card.className = 'gauge-card';
+            card.dataset.id = id;
+            
+            card.innerHTML = `
+                <button class="edit-button" onclick="toggleSettings('${id}')">⚙️</button>
+                <div class="gauge-title">${title}</div>
+                <div class="gauge-value">${value.toFixed(1)}</div>
+                <div class="gauge-unit">${unit}</div>
+                <div class="gauge-settings" id="settings-${id}" style="display: none;">
+                    <label>Min Value:
+                        <input type="number" id="min-${id}" value="${min}">
+                    </label>
+                    <label>Max Value:
+                        <input type="number" id="max-${id}" value="${max}">
+                    </label>
+                    <button class="save-button" onclick="saveSettings('${id}')">Save Changes</button>
+                </div>
+            `;
+            return card;
+        }
+        
+        function toggleSettings(id) {
+            const settings = document.getElementById(`settings-${id}`);
+            settings.style.display = settings.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        async function saveSettings(id) {
+            const minInput = document.getElementById(`min-${id}`);
+            const maxInput = document.getElementById(`max-${id}`);
+            
+            const min = parseFloat(minInput.value);
+            const max = parseFloat(maxInput.value);
+            
+            if (isNaN(min) || isNaN(max)) {
+                alert('Please enter valid numbers for min and max values.');
+                return;
+            }
+            
+            if (min >= max) {
+                alert('Min value must be less than max value.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/update-panel-range', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        panelId: id,
+                        min: min,
+                        max: max
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to update settings');
+                }
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('Settings updated successfully!');
+                    toggleSettings(id);
+                    refreshData();
+                } else {
+                    alert('Failed to update settings: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                alert('An error occurred while saving settings: ' + error.message);
+            }
+        }
+        
+        function formatTitle(key) {
+            return key
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase());
+        }
+        
+        function refreshData() {
+            fetchSolarData();
+        }
+        
+        // Initial load
+        fetchSolarData();
+        // Auto refresh every 30 seconds
+        setInterval(fetchSolarData, 30000);
+    </script>
+</body>
+</html>

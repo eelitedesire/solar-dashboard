@@ -1,0 +1,571 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 1,
+    "links": [],
+    "panels": [
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 20000,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-green",
+                  "value": null
+                },
+                {
+                  "color": "dark-yellow",
+                  "value": 5000
+                },
+                {
+                  "color": "dark-orange",
+                  "value": 10000
+                },
+                {
+                  "color": "dark-red",
+                  "value": 14000
+                }
+              ]
+            },
+            "unit": "W"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "query": "SELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~ /.+\\/total\\/load_power\\/state/\nLIMIT 1\n",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Load Power",
+        "type": "gauge"
+      },
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 16000,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "semi-dark-red",
+                  "value": null
+                },
+                {
+                  "color": "dark-orange",
+                  "value": 4000
+                },
+                {
+                  "color": "yellow",
+                  "value": 8000
+                },
+                {
+                  "color": "dark-green",
+                  "value": 12000
+                }
+              ]
+            },
+            "unit": "W"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 8,
+          "y": 0
+        },
+        "id": 8,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "query": "\nSELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~ /.+\\/total\\/pv_power\\/state/\nLIMIT 1\n",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Solar PV Power",
+        "type": "gauge"
+      },
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "neutral": 0
+            },
+            "mappings": [],
+            "max": 6000,
+            "min": -6000,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-red",
+                  "value": null
+                },
+                {
+                  "color": "dark-orange",
+                  "value": -3000
+                },
+                {
+                  "color": "dark-yellow",
+                  "value": 0
+                },
+                {
+                  "color": "dark-green",
+                  "value": 3000
+                }
+              ]
+            },
+            "unit": "W"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 16,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "query": "\nSELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~ /.+\\/total\\/battery_power\\/state/\nLIMIT 1",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Battery Power",
+        "type": "gauge"
+      },
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "neutral": 0
+            },
+            "mappings": [],
+            "max": 12000,
+            "min": -12000,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": -6000
+                },
+                {
+                  "color": "dark-orange",
+                  "value": 0
+                },
+                {
+                  "color": "dark-red",
+                  "value": 6000
+                }
+              ]
+            },
+            "unit": "W"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 0,
+          "y": 6
+        },
+        "id": 7,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "query": "\nSELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~ /.+\\/total\\/grid_power\\/state/\nLIMIT 1",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Grid Power",
+        "type": "gauge"
+      },
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "neutral": 0
+            },
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-red",
+                  "value": null
+                },
+                {
+                  "color": "semi-dark-orange",
+                  "value": 25
+                },
+                {
+                  "color": "yellow",
+                  "value": 50
+                },
+                {
+                  "color": "dark-green",
+                  "value": 70
+                }
+              ]
+            },
+            "unit": "%"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 6,
+          "y": 6
+        },
+        "id": 9,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "query": "SELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~ /.+\\/total\\/battery_state_of_charge\\/state/\nLIMIT 1\n",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Battery SOC",
+        "type": "gauge"
+      },
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-red",
+                  "value": null
+                },
+                {
+                  "color": "semi-dark-orange",
+                  "value": 25
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 50
+                },
+                {
+                  "color": "dark-green",
+                  "value": 70
+                }
+              ]
+            },
+            "unit": "volt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 12,
+          "y": 6
+        },
+        "id": 10,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "hide": false,
+            "query": "\nSELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~  /.+\\/inverter_\\d+\\/battery_voltage\\/state/\nLIMIT 1\n",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Battery Voltage",
+        "type": "gauge"
+      },
+      {
+        "datasource": "InfluxDB",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 240,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-red",
+                  "value": null
+                },
+                {
+                  "color": "semi-dark-orange",
+                  "value": 60
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 120
+                },
+                {
+                  "color": "dark-green",
+                  "value": 180
+                }
+              ]
+            },
+            "unit": "volt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 18,
+          "y": 6
+        },
+        "id": 2,
+        "options": {
+          "animation": {
+            "duration": 1500,
+            "easing": "easeInOutQuart"
+          },
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "datasource": "InfluxDB",
+            "hide": false,
+            "query": "\nSELECT last(\"value\") AS \"value\"\nFROM \"state\"\nWHERE \"topic\" =~ /.+\\/total\\/grid_voltage\\/state/\nLIMIT 1\n",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series"
+          }
+        ],
+        "title": "Grid Voltage",
+        "type": "gauge"
+      }
+    ],
+    "preload": false,
+    "refresh": "5s",
+    "schemaVersion": 40,
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-1m",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Solar Power Dashboard",
+    "uid": "solar_power_dashboard",
+    "version": 10,
+    "weekStart": ""
+  }
